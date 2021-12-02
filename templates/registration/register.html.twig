@@ -1,17 +1,31 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Register
+{% endblock %}
 
 {% block body %}
-    <h1>Register</h1>
+	{{ include('components/navbar.html.twig') }}
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
+	<div class="container">
+		<h1>Register</h1>
+
+		{{ form_start(registrationForm) }}
+		{{ form_row(registrationForm.email) }}
+		{{ form_row(registrationForm.plainPassword, {
             label: 'Password'
         }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+		{{ form_row(registrationForm.b_dathe, {
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+            label: 'Birthdate'
+        }) }}
+		{{ form_row(registrationForm.phone, {
+
+            label: 'Phone number (optional)'
+        }) }}
+		{{ form_row(registrationForm.agreeTerms) }}
+
+		<button type="submit" class="btn">Register</button>
+		{{ form_end(registrationForm) }}
+	</div>
+
 {% endblock %}

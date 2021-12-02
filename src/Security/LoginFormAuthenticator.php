@@ -19,14 +19,16 @@ use Symfony\Component\Security\Http\Util\TargetPathTrait;
 class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 {
     use TargetPathTrait;
+    private $security;
 
     public const LOGIN_ROUTE = 'app_login';
 
     private UrlGeneratorInterface $urlGenerator;
 
-    public function __construct(UrlGeneratorInterface $urlGenerator)
+    public function __construct(UrlGeneratorInterface $urlGenerator, Security $security)
     {
         $this->urlGenerator = $urlGenerator;
+        $this->security = $security;
     }
 
     public function authenticate(Request $request): PassportInterface
@@ -51,7 +53,11 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
         }
 
         // For example:
-        return new RedirectResponse($this->urlGenerator->generate('rooms_index'));
+        if ($this->security->isGranted('ROLE_ADMIN')) {
+            return  new RedirectResponse($this->urlGenerator->generate("rooms_index"));
+        } else {
+            return  new RedirectResponse($this->urlGenerator->generate("static"));
+        }
     }
 
     protected function getLoginUrl(Request $request): string

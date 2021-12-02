@@ -3,6 +3,9 @@
 namespace App\Form;
 
 use App\Entity\User;
+use DateTime;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -43,7 +46,14 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])
-        ;
+            ->add('b_dathe', DateTimeType::class, [
+                'constraints' => [
+                    new NotBlank(
+                        ['message' => 'Please enter your birth date.',]
+                    )
+                ]
+            ])
+            ->add('phone', TextType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
