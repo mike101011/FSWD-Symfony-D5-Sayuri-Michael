@@ -2,8 +2,20 @@
 
 {% block title %}Register
 {% endblock %}
+{% block stylesheets %}
+
+	{#{{ encore_entry_link_tags('app') }}#}
+{% endblock %}
+
 
 {% block body %}
+	<style>
+		body {
+			background-color: white;
+
+		}
+	</style>
+
 	{{ include('components/navbar.html.twig') }}
 
 	<div class="container">
