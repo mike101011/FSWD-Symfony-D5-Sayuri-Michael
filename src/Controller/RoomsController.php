@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+use App\Service\FileUploader;
+
 #[Route('/rooms')]
 class RoomsController extends AbstractController
 {
@@ -23,11 +25,18 @@ class RoomsController extends AbstractController
     }
 
     #[Route('/new', name: 'rooms_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, FileUploader $fileUploader): Response
     {
         $room = new Rooms();
         $form = $this->createForm(RoomsType::class, $room);
         $form->handleRequest($request);
+        $pictureFile = $form->get('picture')->getData();
+
+        //pictureUrl is the name given to the input field
+        if ($pictureFile) {
+            $pictureFileName = $fileUploader->upload($pictureFile);
+            $room->setPicture($pictureFileName);
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($room);
@@ -71,7 +80,7 @@ class RoomsController extends AbstractController
     #[Route('/{id}', name: 'rooms_delete', methods: ['POST'])]
     public function delete(Request $request, Rooms $room, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$room->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $room->getId(), $request->request->get('_token'))) {
             $entityManager->remove($room);
             $entityManager->flush();
         }
